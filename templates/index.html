@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StyleBot - AI Fashion Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.5; }
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(-45deg, #ffd6e8, #c9f0ff, #fff5e6, #e8f5e9);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .bg-icon {
+            position: fixed;
+            font-size: 80px;
+            opacity: 0.25;
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+        }
+        
+        .icon-1 { top: 10%; left: 10%; animation-delay: 0s; }
+        .icon-2 { top: 20%; right: 15%; animation: bounce 4s ease-in-out infinite; animation-delay: 1s; }
+        .icon-3 { bottom: 15%; left: 20%; animation-delay: 2s; }
+        .icon-4 { bottom: 25%; right: 10%; animation: pulse 5s ease-in-out infinite; animation-delay: 3s; }
+        .icon-5 { top: 50%; left: 5%; animation: rotate 20s linear infinite; font-size: 60px; opacity: 0.2; }
+        .icon-6 { top: 60%; right: 8%; animation: bounce 5s ease-in-out infinite; animation-delay: 2s; font-size: 70px; }
+        .icon-7 { bottom: 40%; left: 50%; animation: pulse 6s ease-in-out infinite; animation-delay: 1s; font-size: 65px; opacity: 0.22; }
+        .icon-8 { top: 35%; right: 25%; animation: float 7s ease-in-out infinite; animation-delay: 4s; font-size: 75px; }
+        
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 35px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.8);
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            position: relative;
+            z-index: 1;
+            border: 3px solid rgba(255, 255, 255, 0.6);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #a78bfa 0%, #ec4899 50%, #f472b6 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            animation: float 10s ease-in-out infinite;
+        }
+        
+        .sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            animation: sparkle 3s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(255,255,255,0.8);
+        }
+        
+        .sparkle:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; }
+        .sparkle:nth-child(2) { top: 40%; right: 30%; animation-delay: 0.5s; }
+        .sparkle:nth-child(3) { bottom: 30%; left: 40%; animation-delay: 1s; }
+        .sparkle:nth-child(4) { top: 60%; right: 20%; animation-delay: 1.5s; }
+        
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5em;
+            font-weight: 900;
+            margin-bottom: 15px;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+            font-weight: 300;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+            text-transform: uppercase;
+        }
+        
+        .lang-toggle {
+            position: absolute;
+            top: 25px;
+            right: 30px;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid rgba(255,255,255,0.6);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            z-index: 2;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .lang-toggle:hover {
+            background: rgba(255,255,255,0.5);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        
+        .quick-prompts {
+            padding: 35px;
+            background: linear-gradient(to bottom, #ffffff 0%, #fafbfc 100%);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .quick-prompt {
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            color: #667eea;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            position: relative;
+        }
+        
+        .quick-prompt::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 30px;
+            padding: 2px;
+            background: linear-gradient(135deg, #a78bfa, #ec4899, #f472b6);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        
+        .quick-prompt:hover::before {
+            opacity: 1;
+        }
+        
+        .quick-prompt:hover {
+            background: linear-gradient(135deg, #a78bfa 0%, #ec4899 50%, #f472b6 100%);
+            color: white;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(167, 139, 250, 0.4);
+        }
+        
+        .chat-container {
+            height: 520px;
+            overflow-y: auto;
+            padding: 35px;
+            background: linear-gradient(to bottom, #ffffff 0%, #fafbfc 100%);
+            scroll-behavior: smooth;
+        }
+        
+        .chat-container::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        .chat-container::-webkit-scrollbar-track {
+            background: #f1f3f5;
+            border-radius: 10px;
+        }
+        
+        .chat-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
+            border-radius: 10px;
+        }
+        
+        .message {
+            margin-bottom: 25px;
+            padding: 18px 24px;
+            border-radius: 25px;
+            max-width: 80%;
+            animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            line-height: 1.7;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .user-message {
+            background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 8px;
+            font-weight: 500;
+            box-shadow: 0 8px 25px rgba(167, 139, 250, 0.4);
+        }
+        
+        .bot-message {
+            background: white;
+            color: #2d3748;
+            border: 2px solid #e9ecef;
+            border-bottom-left-radius: 8px;
+        }
+        
+        .bot-message strong {
+            color: #a78bfa;
+            font-weight: 700;
+        }
+        
+        .bot-message ul {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+        
+        .bot-message li {
+            margin: 10px 0;
+            line-height: 1.7;
+        }
+        
+        .input-area {
+            padding: 30px;
+            background: linear-gradient(to top, #ffffff 0%, #fafbfc 100%);
+            display: flex;
+            gap: 15px;
+            border-top: 2px solid #e9ecef;
+        }
+        
+        .input-area input {
+            flex: 1;
+            padding: 18px 28px;
+            border: 3px solid #e9ecef;
+            border-radius: 35px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.4s ease;
+            background: white;
+            font-weight: 500;
+        }
+        
+        .input-area input:focus {
+            outline: none;
+            border-color: #a78bfa;
+            background: white;
+            box-shadow: 0 0 0 6px rgba(167, 139, 250, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .input-area button {
+            padding: 18px 40px;
+            background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
+            color: white;
+            border: none;
+            border-radius: 35px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(167, 139, 250, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .input-area button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(167, 139, 250, 0.5);
+        }
+        
+        .input-area button:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+        
+        .input-area button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .trends-btn {
+            margin: 30px 35px;
+            padding: 18px;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 16px;
+            width: calc(100% - 70px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .trends-btn:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(251, 191, 36, 0.5);
+        }
+        
+        .loading {
+            opacity: 0.7;
+            position: relative;
+        }
+        
+        .loading::after {
+            content: '';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: translateY(-50%) rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.2em; }
+            .container { border-radius: 25px; }
+            .quick-prompts { padding: 25px; gap: 10px; }
+            .quick-prompt { font-size: 13px; padding: 10px 20px; }
+            .chat-container { height: 420px; padding: 25px; }
+            .bg-icon { font-size: 40px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-icon icon-1">👗</div>
+    <div class="bg-icon icon-2">👠</div>
+    <div class="bg-icon icon-3">👜</div>
+    <div class="bg-icon icon-4">💄</div>
+    <div class="bg-icon icon-5">💍</div>
+    <div class="bg-icon icon-6">👟</div>
+    <div class="bg-icon icon-7">👑</div>
+    <div class="bg-icon icon-8">💎</div>
+
+    <div class="container">
+        <div class="header">
+            <div class="sparkle"></div>
+            <div class="sparkle"></div>
+            <div class="sparkle"></div>
+            <div class="sparkle"></div>
+            <button class="lang-toggle" onclick="toggleLanguage()">EN / ಕನ್ನಡ / हिंदी</button>
+            <h1 id="title">StyleBot 👗</h1>
+            <p id="subtitle">Your AI-Powered Personal Stylist</p>
+        </div>
+        
+        <div class="quick-prompts">
+            <button class="quick-prompt" onclick="setPrompt('What should I wear for a beach vacation?')">🏖️ Beach Vacation</button>
+            <button class="quick-prompt" onclick="setPrompt('Suggest office wear for summer')">💼 Office Wear</button>
+            <button class="quick-prompt" onclick="setPrompt('I need a party outfit')">🎉 Party Outfit</button>
+            <button class="quick-prompt" onclick="setPrompt('Traditional wedding attire')">💒 Wedding</button>
+            <button class="quick-prompt" onclick="setPrompt('Casual weekend style')">👕 Casual Style</button>
+        </div>
+
+        <button class="trends-btn" onclick="getTrends()" id="trendsBtn">📈 Get Current Fashion Trends</button>
+        
+        <div class="chat-container" id="chatContainer"></div>
+        
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Describe your style, occasion, or ask anything...">
+            <button id="sendBtn" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = 'en';
+        let translations = {};
+
+        async function loadTranslations(lang) {
+            const response = await fetch(`/get_translations/${lang}`);
+            translations = await response.json();
+            updateUI();
+        }
+
+        function updateUI() {
+            document.getElementById('title').textContent = translations.title;
+            document.getElementById('subtitle').textContent = translations.subtitle;
+            document.getElementById('userInput').placeholder = translations.ask;
+            document.getElementById('sendBtn').textContent = translations.send;
+            document.getElementById('trendsBtn').textContent = '📈 ' + translations.trends;
+        }
+
+        function setPrompt(text) {
+            document.getElementById('userInput').value = text;
+            document.getElementById('userInput').focus();
+        }
+
+        function toggleLanguage() {
+            if (currentLang === 'en') {
+                currentLang = 'kn';
+            } else if (currentLang === 'kn') {
+                currentLang = 'hi';
+            } else {
+                currentLang = 'en';
+            }
+            loadTranslations(currentLang);
+        }
+
+        function addMessage(text, isUser) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            
+            const textarea = document.createElement('textarea');
+            textarea.innerHTML = text;
+            let content = textarea.value;
+            
+            if (!isUser) {
+                content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                content = content.replace(/^\* (.+)$/gm, '<li>$1</li>');
+                content = content.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+                content = content.replace(/\n/g, '<br>');
+                content = content.replace(/<ul><br>/g, '<ul>');
+                content = content.replace(/<br><\/ul>/g, '</ul>');
+            } else {
+                content = content.replace(/\n/g, '<br>');
+            }
+            
+            messageDiv.innerHTML = content;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const query = input.value.trim();
+            if (!query) return;
+
+            addMessage(query, true);
+            input.value = '';
+
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+            sendBtn.classList.add('loading');
+
+            try {
+                const response = await fetch('/style_advice', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query, language: currentLang })
+                });
+
+                const data = await response.json();
+                
+                if (response.status === 429) {
+                    addMessage(translations.rate_limit, false);
+                } else if (data.error) {
+                    addMessage(`${translations.error}: ${data.error}`, false);
+                } else {
+                    addMessage(data.advice, false);
+                }
+            } catch (error) {
+                addMessage(`${translations.error}: ${error.message}`, false);
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.classList.remove('loading');
+            }
+        }
+
+        async function getTrends() {
+            addMessage('📈 Getting current fashion trends...', true);
+
+            try {
+                const response = await fetch('/fashion_trends', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ language: currentLang })
+                });
+
+                const data = await response.json();
+                
+                if (response.status === 429) {
+                    addMessage(translations.rate_limit, false);
+                } else if (data.error) {
+                    addMessage(`${translations.error}: ${data.error}`, false);
+                } else {
+                    addMessage(data.trends, false);
+                }
+            } catch (error) {
+                addMessage(`${translations.error}: ${error.message}`, false);
+            }
+        }
+
+        document.getElementById('userInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        loadTranslations('en');
+    </script>
+</body>
+</html>
